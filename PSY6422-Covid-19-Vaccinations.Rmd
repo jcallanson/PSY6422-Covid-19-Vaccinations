@@ -1,6 +1,5 @@
 ---
 title: "Administered Covid-19 vaccinations by manufacturer over time"
-author: "Julie Allanson"
 date: '2022-05-01'
 output: prettydoc::html_pretty
 theme: tactile
