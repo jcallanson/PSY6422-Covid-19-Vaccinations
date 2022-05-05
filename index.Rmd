@@ -1,0 +1,288 @@
+---
+title: "Administered Covid-19 Vaccinations by manufacturer over time"
+author: "Julie Allanson"
+date: '2022-05-01'
+output: prettydoc::html_pretty
+theme: tactile
+highlight: github
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(here)
+library(ggplot2)
+library(gganimate)
+library(gifski)
+library(png)
+library(dplyr)
+library(plotly)
+library(highcharter)
+library(codebook)
+library(future)
+```
+
+### Background  
+This projects looks at vaccinations administered for Covid-19 over time, by manufacturer. 
+Covid-19 has affected people worldwide and with media attention heavily focused upon 
+vaccination uptake and potential benefits and risks of the varying vaccinations offered, 
+I was interested to see how many vaccinations had actually been administered over time 
+and by whom. The data is collected from [https://www.kaggle.com/code/fit4kz/covid-immunizations-analysis-in-r/data], 
+and is a Kaggle data set, plotted and visualised in to varying interactive line graph formats.     
+The following steps provide a guide to achieve this with code provided for use in RStudio. 
+Various packages are used and may need to be installed before running the code, as may pathway specification to local drives for accessing the data and saving plots, scripts and codebooks.     
+The package 'here' has been used within the code to try to minimise these issues and set the working directory to wherever the user is working from.  
+
+### Aims
+The data set lends itself to investigate several outcomes. I was interested at finding total
+vaccinations administered worldwide to date, total vaccinations administered by country to see which country had the largest vaccination uptake, and finally total vaccinations 
+administered over time by manufacturer, to see which vaccine was administered most worldwide 
+to date.
+
+### Load and view data
+First we need to load all packages used in RStudio, which can be installed using the install.packages() function
+
+```{r load packages, warning=FALSE, message=FALSE, echo=TRUE} 
+
+#load packages
+
+library(tidyverse)
+library(here)
+library(ggplot2)
+library(gganimate)
+library(gifski)
+library(png)
+library(dplyr)
+library(plotly)
+library(highcharter)
+library(codebook)
+library(future)
+
+```
+
+Next we need to import the data
+
+```{r set directory and load data, warning=FALSE, results='hide'}
+
+#load data
+
+vaccinations <- read.csv(here("data", "vaccinations.csv"))
+
+```
+
+Now we should take a look at the data itself
+
+```{r view data, warning=FALSE}
+
+head(vaccinations)
+
+```
+
+We can see there are four variables **location**, **date**, **vaccine** and **total vaccinations**. By using the below code we can also see the class of variable according to RStudio
+
+```{r view data set, warning=FALSE, message=FALSE, echo=TRUE}
+
+#view data set
+glimpse(vaccinations)
+
+```
+
+Here we can see that **location**, **date** and **vaccine** are classed as characters and **total vaccinations** is classed as interval data. We need to format some of the options and data so RStudio knows how to correctly interpret certain values within the data set.
+
+### Preparing the data
+
+Specifying that the **date** variable is a date, ensures the variable is interpreted that way by RStudio
+
+```{r format date, warning=FALSE, message=FALSE, echo=TRUE}
+
+# create a variable with the correct formats
+
+vaccinations.formatted <- vaccinations %>%
+  mutate(date = as.Date(date))
+
+#change limits for scientific as y axis values are so high and will show as scientific values without this code
+
+vaccinations.formatted <- vaccinations.formatted %>%
+  mutate(total_vaccinations = total_vaccinations / 1000000)
+
+options(scipen = 30000000)
+
+```
+
+Checking for duplicates in the data set ensures data, variables or trials are not read twice by RStudio and therefore skewing results.
+
+```{r check for duplicate in the data set, warning=FALSE, messages=FALSE, echo=TRUE, results='hide'}
+#check for duplicates in the data set
+
+anyDuplicated(vaccinations.formatted)
+
+#There are no duplicates in this data set
+
+```
+
+### Creating dataframes to answer aims
+
+```{r create dataframe to find total vaccinations, warning=FALSE, message=FALSE, echo=TRUE, results='markup'}
+
+#find total vaccinations administered worldwide
+
+vaccinations_worldwide <- vaccinations.formatted %>%
+  summarise(total_immunizations = sum(total_vaccinations, na.rm = TRUE))
+
+vaccinations_worldwide
+
+#find total vaccinations by country
+
+vaccinations_by_country <- vaccinations.formatted %>%
+  group_by(location) %>%
+  summarise(total_immunizations = sum(total_vaccinations, na.rm = TRUE), .groups = 'drop') %>%
+  arrange(desc(total_immunizations))
+
+vaccinations_by_country
+
+```
+
+### Creating a plot
+
+We now need to create the basic plot using the ggplot package
+
+```{r create data frame for plot, warning=FALSE, message=FALSE, echo=TRUE, results='hide'}
+
+#First create a dataframe that has total vaccinations by manufacturer as the set variables
+
+vaccinations_by_manufacturer <- vaccinations.formatted %>%
+  drop_na() %>%
+  group_by(date,
+           vaccine) %>%
+  summarise(total_vaccinations = sum(total_vaccinations), .groups = 'drop')
+
+```
+
+Now that we have our dataframe we can create our plot using the ggplot and gganimate packages
+
+```{r create plot, eval=TRUE, echo=TRUE, message=FALSE, warning=FALSE, results='hide'}
+
+#create a basic plot showing total vaccinations over time, grouped by vaccine
+#customise plot
+#add labels and theme
+#animate plot over time using gganimate
+
+p1 <- ggplot(vaccinations_by_manufacturer, aes(x=date, y=total_vaccinations, group=vaccine, color=vaccine)) +
+  geom_line() +
+  geom_point() + 
+  scale_y_continuous() +
+  ggtitle("Vaccinations by manufacturer over time.") +
+  ylab("Number of Vaccinations") +
+  xlab("Date") +
+  theme_classic() +
+  transition_reveal(date)
+
+#view plot 
+
+p1
+
+#Save plot as a gif 
+
+anim_save(here("output", "p1gganimate.gif"))
+
+```
+
+We can also save this plot as a static picture by saving as a .png file
+
+```{r create plot using plotly, warning=FALSE, eval=TRUE, message=FALSE, echo=TRUE}
+#save plot as a .png file
+
+p1 <- ggplot(vaccinations_by_manufacturer, aes(x=date, y=total_vaccinations, group=vaccine, color=vaccine)) +
+  geom_line() +
+  geom_point() + 
+  scale_y_continuous() +
+  ggtitle("Vaccinations by manufacturer over time.") +
+  ylab("Number of Vaccinations") +
+  xlab("Date") +
+  theme_classic()
+
+ggsave(here("output", "p1ggplot.png"))
+
+```
+
+Adding plotly allows us to make the plot interactive, with a table that offers daily information on total vaccines administered by manufacturer when hovering the cursor over a data point on the plot. This allows for a more in depth look at the data shown, as well as still providing a clean and easy to read overview.
+
+```{r adding plotly, warning=FALSE, eval=TRUE, message=FALSE, echo=TRUE, results='hide'}
+
+#remove animation and add plotly
+
+p2 <- ggplot(vaccinations_by_manufacturer, aes(x=date, y=total_vaccinations, group=vaccine, color=vaccine)) +
+  geom_line() +
+  geom_point() + 
+  scale_y_continuous() +
+  ggtitle("Vaccinations by manufacturer over time.") +
+  ylab("Number of Vaccinations") +
+  xlab("Date") +
+  theme_classic()
+  
+p2 <- ggplotly(p2)
+p2
+
+```
+
+Although the plot can be downloaded as a png when viewed, saving the graph as a HTML file creates a file with all needed JavaScript and CSS dependency files contained within it, that can be viewed online and is still interactive.
+
+```{r save plotly as HTML file, warning=FALSE, message=FALSE, echo=TRUE} 
+
+#Save plotly as HTML file  
+
+htmlwidgets::saveWidget(p2, "output/p2plotly.html")
+
+```
+
+### Highcharter
+
+I like the interactive element of the plotly graph, and tidying and exploring more with this plot is quite possible in ggplot. Making use of another package called highcharter, allows for further visual finesse, with differing themes and effects to choose from, increasing impact to your plot. Highcharter has an excellent tooltip with many customization functions, which we will be using and coding for below. Highcharter is written in pure JavaScript, making adding interactive charts to web sites or web applications easier.
+
+```{r creating a plot using highcharter, warning=FALSE, eval=TRUE, message=FALSE, echo=TRUE, results='markup', fig.height=6, fig.width=10}
+
+#plotting the data in a similar way using highcharter
+
+p3 <-  vaccinations_by_manufacturer %>%
+  hchart('line', hcaes(x = date, y = total_vaccinations, group = vaccine)) %>%
+  hc_title(text = 'Covid 19 vaccinations over time by manufacturer') %>%
+  hc_subtitle(text = 'Number of administered vaccinations for Covid 19 over time and by each manufacturer') %>%
+  hc_xAxis(title = list(text = 'Total administered vaccinations')) %>%
+  hc_yAxis(title = list(text = 'Date')) %>%
+  hc_tooltip(crosshairs = TRUE, sort = TRUE, borderWidth = 6, table = TRUE, shared = TRUE) %>%
+  hc_add_theme(hc_theme_ffx()) %>%
+  hc_exporting(enabled = TRUE, filename = "plots/vaccinations-by-manufacturer-highcharter")
+  
+#view plot
+
+p3
+
+```
+
+By defining that exporting is enabled allows the plot to always be exported when viewed, with the plot being saved as a HTML file in the same way as the previous plotly graph 
+
+```{r warning=FALSE, message=FALSE, echo=TRUE}
+
+#save highcharter plot
+
+htmlwidgets::saveWidget(p3, "output/p3highcharter.html")
+
+```
+
+### Codebook
+create a codebook that uses metadata to give a technical overview of the dataframe used to create the plots which specify the values RStudio attributes. When viewed the codebook is saved in a subfolder called figures as .pdf files
+
+```{r creating and viewing a codebook, warning=FALSE, message=FALSE, echo=TRUE, results='hide'}
+
+#create and view a codebook
+
+codebook <- codebook(vaccinations_by_manufacturer)
+codebook
+
+```
+
+### Discussion
+I found this data easy to work with to answer my aims, and it was from a reliable source. Source data only contained the original data file, which was transferred into this project after unzipping. 
+
+I have found this project a steep learning curve, but enjoyable. I have learnt so much about the use of RStudio for visualizing data and presenting research in an open format online.  
+I think one of the most challenging aspects of the project was adapting code to suit my needs. I had very clear ideas around what I wanted to do and functions I needed to perform to get there, but in the tailoring of functions I generally ran in to errors that required me to get a better understanding of the function I wanted to perform, before I could amend the code correctly and it would run error free. 
