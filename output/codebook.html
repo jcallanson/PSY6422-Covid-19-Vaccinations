@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<style>body{background-color:white;}</style>
+
+
+</head>
+<body>
+
+
+
+
+
+
+
+### Metadata
+
+#### Description
+__Dataset name__: vaccinations_by_manufacturer
+
+
+The dataset has N=4230 rows and 3 columns.
+4230 rows have no missing values on any column.
+
+&lt;details&gt;
+&lt;summary title="Expand this section to see some additional metadata in a structured format that is useful for search engines"&gt;Metadata for search engines&lt;/summary&gt;
+
+
+
+
+
+
+- __Date published__: 2022-05-17
+
+
+
+
+
+
+|x                  |
+|:------------------|
+|date               |
+|vaccine            |
+|total_vaccinations |
+
+
+
+&lt;/details&gt;
+
+
+
+
+
+#Variables
+
+
+
+
+### date {#date .tabset}
+
+
+
+#### Distribution {#date_distribution}
+
+## 451  unique, categorical values, so not shown.
+
+
+0 missing values.
+
+#### Summary statistics {#date_summary}
+
+
+|name |data_type | n_missing| complete_rate| n_unique|min        |median     |max        |label |
+|:----|:---------|---------:|-------------:|--------:|:----------|:----------|:----------|:-----|
+|date |Date      |         0|             1|      451|2020-12-04 |2021-08-08 |2022-03-08 |NA    |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### vaccine {#vaccine .tabset}
+
+
+
+#### Distribution {#vaccine_distribution}
+
+figure/cb_vaccinations_by_manufacturer_vaccine_distribution-15-1.pdf
+
+0 missing values.
+
+#### Summary statistics {#vaccine_summary}
+
+
+|name    |data_type | n_missing| complete_rate| n_unique| empty|min |max | whitespace|label |
+|:-------|:---------|---------:|-------------:|--------:|-----:|:---|:---|----------:|:-----|
+|vaccine |character |         0|             1|       10|     0|7   |18  |          0|NA    |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### total_vaccinations {#total_vaccinations .tabset}
+
+
+
+#### Distribution {#total_vaccinations_distribution}
+
+figure/cb_vaccinations_by_manufacturer_total_vaccinations_distribution-22-1.pdf
+
+0 missing values.
+
+#### Summary statistics {#total_vaccinations_summary}
+
+
+|name               |data_type | n_missing| complete_rate|min |median |max  |     mean|       sd|hist                                     |label |
+|:------------------|:---------|---------:|-------------:|:---|:------|:----|--------:|--------:|:----------------------------------------|:-----|
+|total_vaccinations |numeric   |         0|             1|0   |5.2    |1661 | 111.0588| 266.6677|&lt;U+2587&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2581&gt; |NA    |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Missingness report
+
+
+
+
+
+
+
+## Codebook table
+
+
+
+|name                                                 |data_type | n_missing| complete_rate| n_unique| empty|min        |median     |max        |     mean|       sd| whitespace|hist                                     |label |
+|:----------------------------------------------------|:---------|---------:|-------------:|--------:|-----:|:----------|:----------|:----------|--------:|--------:|----------:|:----------------------------------------|:-----|
+|&lt;a href="#date"&gt;date&lt;/a&gt;                             |Date      |         0|             1|      451|    NA|2020-12-04 |2021-08-08 |2022-03-08 |       NA|       NA|         NA|NA                                       |NA    |
+|&lt;a href="#vaccine"&gt;vaccine&lt;/a&gt;                       |character |         0|             1|       10|     0|7          |NA         |18         |       NA|       NA|          0|NA                                       |NA    |
+|&lt;a href="#total_vaccinations"&gt;total_vaccinations&lt;/a&gt; |numeric   |         0|             1|       NA|    NA|0          |5.2        |1661       | 111.0588| 266.6677|         NA|&lt;U+2587&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2581&gt;&lt;U+2581&gt; |NA    |
+
+
+
+
+
+
+&lt;script type="application/ld+json"&gt;
+{
+  "name": "vaccinations_by_manufacturer",
+  "datePublished": "2022-05-17",
+  "description": "The dataset has N=4230 rows and 3 columns.\n4230 rows have no missing values on any column.\n\n\n## Table of variables\nThis table contains variable names, labels, and number of missing values.\nSee the complete codebook for more.\n\n|name               |label | n_missing|\n|:------------------|:-----|---------:|\n|date               |NA    |         0|\n|vaccine            |NA    |         0|\n|total_vaccinations |NA    |         0|\n\n### Note\nThis dataset was automatically described using the [codebook R package](https://rubenarslan.github.io/codebook/) (version 0.9.2).",
+  "keywords": ["date", "vaccine", "total_vaccinations"],
+  "@context": "http://schema.org/",
+  "@type": "Dataset",
+  "variableMeasured": [
+    {
+      "name": "date",
+      "@type": "propertyValue"
+    },
+    {
+      "name": "vaccine",
+      "@type": "propertyValue"
+    },
+    {
+      "name": "total_vaccinations",
+      "@type": "propertyValue"
+    }
+  ]
+}
+&lt;/script&gt;
+
+&lt;details&gt;&lt;summary&gt;JSON-LD metadata&lt;/summary&gt;
+The following JSON-LD can be found by search engines, if you share this codebook
+publicly on the web.
+
+```json
+{
+  "name": "vaccinations_by_manufacturer",
+  "datePublished": "2022-05-17",
+  "description": "The dataset has N=4230 rows and 3 columns.\n4230 rows have no missing values on any column.\n\n\n## Table of variables\nThis table contains variable names, labels, and number of missing values.\nSee the complete codebook for more.\n\n|name               |label | n_missing|\n|:------------------|:-----|---------:|\n|date               |NA    |         0|\n|vaccine            |NA    |         0|\n|total_vaccinations |NA    |         0|\n\n### Note\nThis dataset was automatically described using the [codebook R package](https://rubenarslan.github.io/codebook/) (version 0.9.2).",
+  "keywords": ["date", "vaccine", "total_vaccinations"],
+  "@context": "http://schema.org/",
+  "@type": "Dataset",
+  "variableMeasured": [
+    {
+      "name": "date",
+      "@type": "propertyValue"
+    },
+    {
+      "name": "vaccine",
+      "@type": "propertyValue"
+    },
+    {
+      "name": "total_vaccinations",
+      "@type": "propertyValue"
+    }
+  ]
+}`
+```
+&lt;/details&gt;
+</body>
+</html>
